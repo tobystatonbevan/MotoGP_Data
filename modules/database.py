@@ -10,7 +10,7 @@ def createConnection(dbName = "motogp_test",uName = configu.dbUser,pWord = confi
                             port = portNo)
     return dbConn
 
-def createTable(c,q = "CREATE TABLE motogp_riders(id SERIAL PRIMARY KEY,rider_num SERIAL UNIQUE NOT NULL,rider_name VARCHAR (50) UNIQUE NOT NULL,bike_manufacturer VARCHAR (50) NOT NULL,current_track VARCHAR (50) NOT NULL);"):
+def createTable(c,q = "CREATE TABLE motogp_riders(id SERIAL PRIMARY KEY,rider_num SERIAL NOT NULL,rider_name VARCHAR (50) NOT NULL;"):
     # Execute a command: create motogp_riders table
     c.execute(q)
     return

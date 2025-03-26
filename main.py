@@ -1,4 +1,4 @@
-from modules import insertContent,createConnection,displayContents
+from modules import insertContent,createConnection,displayContents,createTable,getRiderNameNumbers
 
 dbConnection = createConnection()
 
@@ -6,13 +6,31 @@ dbConnection = createConnection()
 cur = dbConnection.cursor()
 
 try:
-    insertContent(cur,"motogp_riders",["rider_num","rider_name","bike_manufacturer","current_track"],[11,'Jolly Rodger','Lexmoto','Brown Lid'])
+    createTable(cur,"CREATE TABLE motogp_riders(id SERIAL PRIMARY KEY,rider_num SERIAL NOT NULL,rider_name VARCHAR (50) NOT NULL,UNIQUE (rider_num,rider_name));")
+    # Make the changes to the database persistent
+    dbConnection.commit()
+
 except Exception as e:
+    dbConnection.commit()
     print(e)
 
-# Make the changes to the database persistent
-dbConnection.commit()
+riderNameNumList = getRiderNameNumbers()
 
+for i in riderNameNumList:
+        try:
+            # Open a cursor to perform database operations
+            cur = dbConnection.cursor()
+            insertContent(cur,"motogp_riders",["rider_num","rider_name"],[i['Number'],i['Name']])
+            # Make the changes to the database persistent
+            dbConnection.commit()
+            #print(i)
+        except Exception as e:
+            dbConnection.commit()
+            #print([i['Number'],i['Name']])
+            print(f"{i} throw error: {e}")
+
+
+cur = dbConnection.cursor()
 rows = displayContents(cur)
 dbConnection.commit()
 # Close cursor and communication with the database
@@ -21,3 +39,5 @@ dbConnection.close()
 
 for row in rows:
     print(row)
+
+#Eddie o'shea doesn't get added, handle errors so duplicates don't show, motogp/2/3/e label somehow
