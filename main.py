@@ -1,4 +1,5 @@
 from modules import insertContent,createConnection,displayContents,createTable,getRiderNameNumbers
+from psycopg2 import OperationalError, errorcodes, errors
 
 dbConnection = createConnection()
 
@@ -27,7 +28,9 @@ for i in riderNameNumList:
         except Exception as e:
             dbConnection.commit()
             #print([i['Number'],i['Name']])
-            print(f"{i} throw error: {e}")
+            #strips out unique violation errors so duplicates just get skipped without errors
+            if type(e).__name__ != "UniqueViolation":
+                print(f"{i} throws error: {type(e).__name__}")
 
 
 cur = dbConnection.cursor()
@@ -40,4 +43,4 @@ dbConnection.close()
 for row in rows:
     print(row)
 
-#Eddie o'shea doesn't get added, handle errors so duplicates don't show, motogp/2/3/e label somehow
+#motogp/2/3/e label somehow

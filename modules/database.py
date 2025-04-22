@@ -19,6 +19,9 @@ def createTable(c,q = "CREATE TABLE motogp_riders(id SERIAL PRIMARY KEY,rider_nu
 def insertContent(c,tName, cols, vals):
     stringCols = ",".join(cols)
     stringVals = str(vals)[1:-1]
+    #replaces any double speech marks with single for SQL syntax
+    if stringVals.find("\"")>-1:
+        stringVals = stringVals.replace('"', "'")
     c.execute(f"INSERT INTO {tName}({stringCols}) VALUES({stringVals})")
     return
 

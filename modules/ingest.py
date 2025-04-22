@@ -14,7 +14,12 @@ def getRiderNameNumbers(riderUrl = "https://www.motogp.com/en/riders/motogp"):
     for r in nameResults:
         #print(r)
         nameNumDict = {}
-        nameNumDict['Name'] = r.find_all("span")[0].text.strip()+" "+r.find_all("span")[1].text.strip()
+        fullName = r.find_all("span")[0].text.strip()+" "+r.find_all("span")[1].text.strip()
+        #strips out single speech mark with double single for SQL escape
+        if fullName.find("'")>-1:
+            nameNumDict['Name'] = fullName.replace("'","''")
+        else:
+            nameNumDict['Name'] = fullName
         nameNumDict['Number'] = r.parent.find("span",class_="rider-list__info-hashtag").text[3:]
         nameAndNumberList.append(nameNumDict)
         # print(f"""=========================================
